@@ -1,6 +1,7 @@
 package com.webage.jcal;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -36,6 +37,9 @@ public class AppTest {
 
         var str = output.toString();
 
+        //Check training CRLF
+        assertTrue(str.endsWith("\r\n"));
+        
         //Make sure the ; in property name was not escaped.
         assertEquals(str.indexOf("PROPNAME;"), 0);
 

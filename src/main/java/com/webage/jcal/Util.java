@@ -62,5 +62,6 @@ public class Util {
         breakLine(sb);
 
         output.append(sb);
+        output.append("\r\n");
     }
 }
