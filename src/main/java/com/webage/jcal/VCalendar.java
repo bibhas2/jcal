@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class VCalendar {
-    private MethodType method =MethodType.REQUEST;
+    private MethodType method = MethodType.REQUEST;
     private String productId = "jcal";
     private List<VEvent> eventList = new ArrayList<>();
 
@@ -27,6 +27,8 @@ public class VCalendar {
         this.eventList = eventList;
     }
     public void addEvent(VEvent event) {
+        event.setSequence(getEventList().size() + 1);
+
         getEventList().add(event);
     }
 
@@ -35,6 +37,13 @@ public class VCalendar {
 
         Util.outputProperty(sb, "PRODID:", getProductId());
         
+        sb.append("VERSION:2.0\r\n");
+        sb.append("CALSCALE:GREGORIAN\r\n");
+
+        sb.append(String.format("METHOD:%s\r\n", getMethod().getMethod()));
+
+        getEventList().forEach(event -> event.output(sb));
+
         sb.append("END:VCALENDAR\r\n");
     }
 }

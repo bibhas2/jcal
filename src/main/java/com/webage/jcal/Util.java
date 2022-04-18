@@ -1,7 +1,14 @@
 package com.webage.jcal;
 
-import java.security.cert.CRL;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.format.SignStyle;
+import java.time.temporal.ChronoField;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -13,6 +20,41 @@ public class Util {
         ",", "\\\\,",
         "\n", "\\\\n");
     private static final Pattern escapePattern = Pattern.compile("(\\\\|;|,|\\n)");
+    private static DateTimeFormatter localDateFormatter = new DateTimeFormatterBuilder()
+        .appendValue(ChronoField.YEAR, 4, 10, SignStyle.EXCEEDS_PAD)
+        .appendValue(ChronoField.MONTH_OF_YEAR, 2)
+        .appendValue(ChronoField.DAY_OF_MONTH, 2)
+        .appendLiteral("T")
+        .appendValue(ChronoField.CLOCK_HOUR_OF_DAY, 2)
+        .appendValue(ChronoField.MINUTE_OF_HOUR, 2)
+        .appendLiteral("00")
+        .toFormatter();
+    private static DateTimeFormatter utcDateFormatter = new DateTimeFormatterBuilder()
+        .appendValue(ChronoField.YEAR, 4, 10, SignStyle.EXCEEDS_PAD)
+        .appendValue(ChronoField.MONTH_OF_YEAR, 2)
+        .appendValue(ChronoField.DAY_OF_MONTH, 2)
+        .appendLiteral("T")
+        .appendLiteral("000000Z")
+        .toFormatter();
+
+    public static String formatLocal(LocalDateTime dt, TimeZone tz) {
+        return String.format("TZID=%s:%s", tz.getID(), localDateFormatter.format(dt));
+    }
+
+    /**
+     * Takes a date and time in a given timezone and then converts it to UTC
+     * date and time and then formats it in UTC "Z" format.
+     * 
+     * @param dt The date time in a given time zone.
+     * @param tz The timezone.
+     * @return UTC formatted string. Example: 20201110T091030Z
+     */
+    public static String formatUTC(LocalDateTime dt, TimeZone tz) {
+        var local = dt.atZone(ZoneId.of(tz.getID()));
+        var utcTime = local.withZoneSameInstant(ZoneOffset.UTC).toLocalDateTime();
+        
+        return utcDateFormatter.format(utcTime);
+    }
 
     public static void breakLine(StringBuilder sb) {
         var insertionIdx = MAX_LINE_LENGTH;
