@@ -5,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.TimeZone;
 
 import org.junit.Test;
@@ -128,6 +129,33 @@ public class AppTest {
 
         cal.output(output);
 
+        System.out.println(output.toString());
+    }
+
+    @Test
+    public void testRepeat() {
+        var tz = TimeZone.getTimeZone("America/New_York");
+        var ev = new VEvent();
+
+        ev.setStartDateTime(LocalDateTime.of(2022, 11, 2, 9, 30), tz);
+
+        ev.setOrganizer("Bibhas Bhattacharya", "bibhas.bhattacharya@webagesolutions.com");
+        ev.setUID("uid-001");
+        ev.setStatus(StatusType.CONFIRMED);
+        ev.setSummary("A test event, of immense importance.");
+
+        StringBuilder output = new StringBuilder();
+
+        output.setLength(0);
+        ev.setRepeatFrequency(FrequencyType.DAILY);
+        ev.setRepeatCount(2);
+
+        ev.output(output);
+        System.out.println(output.toString());
+
+        ev.setRepeatCount(Optional.empty());
+        ev.setRepeatUntil(LocalDateTime.of(2022, 11, 4, 0, 00), tz);
+        ev.output(output);
         System.out.println(output.toString());
     }
 }

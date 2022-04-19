@@ -17,8 +17,10 @@ public class VEvent {
     private String dateTimeStamp;
     private int sequence;
     private Optional<String> summary = Optional.empty();
-    private Optional<LocalDateTime> recurUntil = Optional.empty();
-    private Optional<FrequencyType> recurFrequency = Optional.empty();
+    private Optional<FrequencyType> repeatFrequency = Optional.empty();
+    private Optional<LocalDateTime> repeatUntil = Optional.empty();
+    private Optional<Integer> repeatInterval = Optional.empty();
+    private Optional<Integer> repeatCount = Optional.empty();
     private Optional<StatusType> status = Optional.empty();
     private List<String> attendeeList = new ArrayList<>();
     
@@ -86,18 +88,6 @@ public class VEvent {
     public void setSummary(String summary) {
         this.summary = Optional.of(summary);
     }
-    public Optional<FrequencyType> getRecurFrequency() {
-        return recurFrequency;
-    }
-    public void setRecurFrequency(Optional<FrequencyType> recurFrequency) {
-        this.recurFrequency = recurFrequency;
-    }
-    public Optional<LocalDateTime> getRecurUntil() {
-        return recurUntil;
-    }
-    public void setRecurUntil(Optional<LocalDateTime> recurUntil) {
-        this.recurUntil = recurUntil;
-    }
 
     public Optional<String> getCreatedDate() {
         return createdDate;
@@ -133,6 +123,46 @@ public class VEvent {
         this.attendeeList = attendeeList;
     }
 
+    public Optional<FrequencyType> getRepeatFrequency() {
+        return repeatFrequency;
+    }
+
+    public void setRepeatFrequency(FrequencyType repeatFrequency) {
+        this.repeatFrequency = Optional.of(repeatFrequency);
+    }
+
+    public Optional<LocalDateTime> getRepeatUntil() {
+        return repeatUntil;
+    }
+
+    public void setRepeatUntil(LocalDateTime until, TimeZone tz) {
+        this.repeatUntil = Optional.of(Util.toUTC(until, tz));
+    }
+
+    public void setRepeatUntil(LocalDateTime untilUTC) {
+        this.repeatUntil = Optional.of(untilUTC);
+    }
+
+    public Optional<Integer> getRepeatInterval() {
+        return repeatInterval;
+    }
+
+    public void setRepeatInterval(int repeatInterval) {
+        this.repeatInterval = Optional.of(repeatInterval);
+    }
+
+    public Optional<Integer> getRepeatCount() {
+        return repeatCount;
+    }
+
+    public void setRepeatCount(int repeatCount) {
+        this.repeatCount = Optional.of(repeatCount);
+    }
+    
+    public void setRepeatCount(Optional<Integer> repeatCount) {
+        this.repeatCount = repeatCount;
+    }
+
     public void output(StringBuilder sb) {
         sb.append("BEGIN:VEVENT\r\n");
 
@@ -144,6 +174,8 @@ public class VEvent {
             sb.append("\r\n");
         });
 
+        outputRepeatRule(sb);
+        
         sb.append(String.format("DTSTAMP:%s\r\n", getDateTimeStamp()));
 
         Util.outputProperty(sb, "ORGANIZER;", getOrganizer());
@@ -161,6 +193,17 @@ public class VEvent {
         getAttendeeList().forEach(a -> Util.outputProperty(sb, "ATTENDEE;ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION;RSVP=TRUE;", a));
 
         sb.append("END:VEVENT\r\n");
+    }
+
+    private void outputRepeatRule(StringBuilder sb) {
+        getRepeatFrequency().ifPresent(f -> {
+            sb.append("RRULE:");
+            sb.append(String.format("FREQ=%s;", f.getFrequency()));
+            getRepeatUntil().ifPresent(u -> sb.append(String.format("UNTIL=%s;", Util.formatUTC(u))));
+            getRepeatCount().ifPresent(c -> sb.append(String.format("COUNT=%d;", c)));
+            getRepeatInterval().ifPresent(i -> sb.append(String.format("INTERVAL=%d;", i)));
+            sb.append("\r\n");
+        });
     }
 
     private void outputStartDate(StringBuilder sb) {

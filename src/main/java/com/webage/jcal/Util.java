@@ -40,7 +40,9 @@ public class Util {
         .appendValue(ChronoField.MONTH_OF_YEAR, 2)
         .appendValue(ChronoField.DAY_OF_MONTH, 2)
         .appendLiteral("T")
-        .appendLiteral("000000Z")
+        .appendValue(ChronoField.CLOCK_HOUR_OF_DAY, 2)
+        .appendValue(ChronoField.MINUTE_OF_HOUR, 2)
+        .appendLiteral("00Z")
         .toFormatter();
 
     public static String formatLocalDateTime(LocalDateTime dt, TimeZone tz) {
@@ -64,6 +66,10 @@ public class Util {
         var utcTime = local.withZoneSameInstant(ZoneOffset.UTC).toLocalDateTime();
         
         return utcDateFormatter.format(utcTime);
+    }
+
+    public static String formatUTC(LocalDateTime dt) {
+        return utcDateFormatter.format(dt);
     }
 
     public static void breakLine(StringBuilder sb) {
@@ -115,5 +121,12 @@ public class Util {
 
         output.append(sb);
         output.append("\r\n");
+    }
+
+    public static LocalDateTime toUTC(LocalDateTime dt, TimeZone tz) {
+        var local = dt.atZone(ZoneId.of(tz.getID()));
+        var utcTime = local.withZoneSameInstant(ZoneOffset.UTC).toLocalDateTime();
+
+        return utcTime;
     }
 }
