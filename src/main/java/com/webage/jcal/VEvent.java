@@ -2,22 +2,25 @@ package com.webage.jcal;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.TimeZone;
 
 public class VEvent {
-    String organizer;
-    Optional<String> description = Optional.empty();
-    String uid;
-    String startDateTime;
-    Optional<String> endDateTime = Optional.empty();
-    Optional<String> createdDate = Optional.empty();
-    String dateTimeStamp;
-    int sequence;
-    Optional<String> summary = Optional.empty();
-    Optional<LocalDateTime> recurUntil = Optional.empty();
-    Optional<FrequencyType> recurFrequency = Optional.empty();
-    Optional<StatusType> status = Optional.empty();
+    private String organizer;
+    private Optional<String> description = Optional.empty();
+    private String uid;
+    private String startDateTime;
+    private Optional<String> endDateTime = Optional.empty();
+    private Optional<String> createdDate = Optional.empty();
+    private String dateTimeStamp;
+    private int sequence;
+    private Optional<String> summary = Optional.empty();
+    private Optional<LocalDateTime> recurUntil = Optional.empty();
+    private Optional<FrequencyType> recurFrequency = Optional.empty();
+    private Optional<StatusType> status = Optional.empty();
+    private List<String> attendeeList = new ArrayList<>();
     
     VEvent() {
         dateTimeStamp = Util.formatUTC(LocalDateTime.now(), TimeZone.getDefault());
@@ -112,6 +115,24 @@ public class VEvent {
         this.dateTimeStamp = dateTimeStamp;
     }
 
+    public void addAttendee(String name, String email) {
+        attendeeList.add(String.format("CN=%s:mailto:%s",
+            name, email));
+    }
+
+    public void addAttendee(String email) {
+        attendeeList.add(String.format("CN=%s:mailto:%s",
+            email, email));
+    }
+
+    public List<String> getAttendeeList() {
+        return attendeeList;
+    }
+
+    public void setAttendeeList(List<String> attendeeList) {
+        this.attendeeList = attendeeList;
+    }
+
     public void output(StringBuilder sb) {
         sb.append("BEGIN:VEVENT\r\n");
 
@@ -136,6 +157,8 @@ public class VEvent {
 
         getSummary().ifPresent(s -> Util.outputProperty(sb, "SUMMARY:", s));
         getDescription().ifPresent(d -> Util.outputProperty(sb, "DESCRIPTION:", d));
+
+        getAttendeeList().forEach(a -> Util.outputProperty(sb, "ATTENDEE;ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION;RSVP=TRUE;", a));
 
         sb.append("END:VEVENT\r\n");
     }

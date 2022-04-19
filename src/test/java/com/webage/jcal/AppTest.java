@@ -105,4 +105,29 @@ public class AppTest {
 
         System.out.println(output.toString());
     }
+
+    @Test
+    public void testAttendee() {
+        var cal = new VCalendar();
+        var tz = TimeZone.getTimeZone("America/New_York");
+        var ev = new VEvent();
+
+        ev.setStartDateTime(LocalDateTime.of(2022, 11, 2, 9, 30), tz);
+        ev.setEndDateTime(LocalDateTime.of(2022, 11, 2, 11, 30), tz);
+        ev.setOrganizer("Bibhas Bhattacharya", "bibhas.bhattacharya@webagesolutions.com");
+        ev.setUID("uid-001");
+        ev.setCreatedDate(LocalDateTime.of(2021, 10, 2, 9, 15), tz);
+        ev.setStatus(StatusType.CONFIRMED);
+        ev.setSummary("A test event, of immense importance.");
+        ev.addAttendee("bibhas.2@gmail.com");
+        ev.addAttendee("Bibhas Bhattacharya", "bibhas.2@gmail.com");
+
+        cal.addEvent(ev);
+
+        StringBuilder output = new StringBuilder();
+
+        cal.output(output);
+
+        System.out.println(output.toString());
+    }
 }
