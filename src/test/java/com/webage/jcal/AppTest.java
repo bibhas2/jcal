@@ -59,31 +59,28 @@ public class AppTest {
 
     @Test
     public void testBasicEvent() {
-        var cal = new VCalendar();
         var tz = TimeZone.getTimeZone("America/New_York");
         var ev = new VEvent();
 
+        ev.setOrganizer("abc", "abc@example.com");
         ev.setStartDateTime(LocalDateTime.of(2022, 11, 2, 9, 30), tz);
         ev.setEndDateTime(LocalDateTime.of(2022, 11, 2, 11, 30), tz);
-        ev.setOrganizer("Bibhas Bhattacharya", "bibhas.bhattacharya@webagesolutions.com");
         ev.setUID("uid-001");
-        ev.setCreatedDate(LocalDateTime.of(2021, 10, 2, 9, 15), tz);
-        ev.setStatus(StatusType.CONFIRMED);
         ev.setSummary("A test event, of immense importance.");
-
-        cal.addEvent(ev);
 
         StringBuilder output = new StringBuilder();
 
-        cal.output(output);
+        ev.output(output);
 
-        System.out.println(output.toString());
+        var str = output.toString();
+
+        assertTrue(str.contains("DTSTART;TZID=America/New_York:20221102T093000\r\n"));
+        assertTrue(str.contains("DTEND;TZID=America/New_York:20221102T113000\r\n"));
+        assertTrue(str.contains("SUMMARY:A test event\\, of immense importance.\r\n"));
     }
 
     @Test
     public void testAllDayEvent() {
-        var cal = new VCalendar();
-        var tz = TimeZone.getTimeZone("America/New_York");
         var ev = new VEvent();
 
         //2 day long event
@@ -92,44 +89,38 @@ public class AppTest {
         
         ev.setStartDate(startDate);
         ev.setEndDate(endDate);
-        ev.setOrganizer("Bibhas Bhattacharya", "bibhas.bhattacharya@webagesolutions.com");
+        ev.setOrganizer("abc", "abc@example.com");
         ev.setUID("uid-001");
-        ev.setCreatedDate(LocalDateTime.of(2021, 10, 2, 9, 15), tz);
-        ev.setStatus(StatusType.CONFIRMED);
-        ev.setSummary("A test event, of immense importance.");
-
-        cal.addEvent(ev);
 
         StringBuilder output = new StringBuilder();
 
-        cal.output(output);
+        ev.output(output);
 
-        System.out.println(output.toString());
+        var str = output.toString();
+
+        assertTrue(str.contains("DTSTART;VALUE=DATE:20221102\r\n"));
+        assertTrue(str.contains("DTEND;VALUE=DATE:20221104\r\n"));
     }
 
     @Test
-    public void testAttendee() {
-        var cal = new VCalendar();
+    public void testAttendees() {
         var tz = TimeZone.getTimeZone("America/New_York");
         var ev = new VEvent();
 
         ev.setStartDateTime(LocalDateTime.of(2022, 11, 2, 9, 30), tz);
-        ev.setEndDateTime(LocalDateTime.of(2022, 11, 2, 11, 30), tz);
-        ev.setOrganizer("Bibhas Bhattacharya", "bibhas.bhattacharya@webagesolutions.com");
+        ev.setOrganizer("abc", "abc@example.com");
         ev.setUID("uid-001");
-        ev.setCreatedDate(LocalDateTime.of(2021, 10, 2, 9, 15), tz);
-        ev.setStatus(StatusType.CONFIRMED);
-        ev.setSummary("A test event, of immense importance.");
-        ev.addAttendee("bibhas.2@gmail.com");
-        ev.addAttendee("Bibhas Bhattacharya", "bibhas.2@gmail.com");
-
-        cal.addEvent(ev);
+        ev.addAttendee("abc.def@xxxxyyyy.com");
+        ev.addAttendee("Mno Pqr", "mno.pqr@xxxxyyyy.com");
 
         StringBuilder output = new StringBuilder();
 
-        cal.output(output);
+        ev.output(output);
 
-        System.out.println(output.toString());
+        var str = output.toString();
+
+        assertTrue(str.contains("ATTENDEE;ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION;RSVP=TRUE;CN=abc.def@xx\r\n xxyyyy.com:mailto:abc.def@xxxxyyyy.com\r\n"));
+        assertTrue(str.contains("ATTENDEE;ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION;RSVP=TRUE;CN=Mno Pqr:ma\r\n ilto:mno.pqr@xxxxyyyy.com\r\n"));
     }
 
     @Test
@@ -139,23 +130,28 @@ public class AppTest {
 
         ev.setStartDateTime(LocalDateTime.of(2022, 11, 2, 9, 30), tz);
 
-        ev.setOrganizer("Bibhas Bhattacharya", "bibhas.bhattacharya@webagesolutions.com");
+        ev.setOrganizer("abc", "abc@example.com");
         ev.setUID("uid-001");
-        ev.setStatus(StatusType.CONFIRMED);
-        ev.setSummary("A test event, of immense importance.");
 
         StringBuilder output = new StringBuilder();
 
-        output.setLength(0);
         ev.setRepeatFrequency(FrequencyType.DAILY);
         ev.setRepeatCount(2);
 
         ev.output(output);
-        System.out.println(output.toString());
+
+        var str = output.toString();
+
+        assertTrue(str.contains("RRULE:FREQ=DAILY;COUNT=2;\r\n"));
+
+        output.setLength(0);
 
         ev.setRepeatCount(Optional.empty());
         ev.setRepeatUntil(LocalDateTime.of(2022, 11, 4, 0, 00), tz);
         ev.output(output);
-        System.out.println(output.toString());
+
+        str = output.toString();
+        
+        assertTrue(str.contains("RRULE:FREQ=DAILY;UNTIL=20221104T040000Z;\r\n"));
     }
 }
