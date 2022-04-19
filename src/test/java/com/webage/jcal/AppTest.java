@@ -154,4 +154,22 @@ public class AppTest {
         
         assertTrue(str.contains("RRULE:FREQ=DAILY;UNTIL=20221104T040000Z;\r\n"));
     }
+
+    @Test
+    public void testBuilder() {
+        var tz = TimeZone.getTimeZone("America/New_York");
+        var ev = VEvent
+            .builder()
+            .uid("uid-1")
+            .organizer("abc", "xyz@example.com")
+            .starts(LocalDateTime.of(2022, 11, 2, 9, 30), tz)
+            .summary("Test event")
+            .build();
+
+        StringBuilder output = new StringBuilder();
+
+        ev.output(output);
+
+        System.out.println(output.toString());
+    }
 }

@@ -21,7 +21,7 @@ public class VEvent {
     private Optional<LocalDateTime> repeatUntil = Optional.empty();
     private Optional<Integer> repeatInterval = Optional.empty();
     private Optional<Integer> repeatCount = Optional.empty();
-    private Optional<StatusType> status = Optional.empty();
+    private Optional<StatusType> status = Optional.of(StatusType.CONFIRMED);
     private List<String> attendeeList = new ArrayList<>();
     
     VEvent() {
@@ -210,5 +210,107 @@ public class VEvent {
         sb.append("DTSTART;");
         sb.append(getStartDateTime());
         sb.append("\r\n");
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static class Builder {
+        private VEvent event = new VEvent();
+
+        public Builder organizer(String organizer) {
+            event.setOrganizer(organizer);
+
+            return this;
+        }
+        public Builder organizer(String name, String email) {
+            event.setOrganizer(name, email);
+
+            return this;
+        }
+        public Builder description(String description) {
+            event.setDescription(description);
+
+            return this;
+        }
+        public Builder uid(String uid) {
+            event.setUID(uid);
+
+            return this;
+        }
+        public Builder starts(LocalDateTime startDateTime, TimeZone timeZone) {
+            event.setStartDateTime(startDateTime, timeZone);
+
+            return this;
+        }
+        public Builder starts(LocalDate startDate) {
+            event.setStartDate(startDate);
+
+            return this;
+        }
+        public Builder ends(LocalDateTime endDateTime, TimeZone timeZone) {
+            event.setEndDateTime(endDateTime, timeZone);
+
+            return this;
+        }
+        public Builder ends(LocalDate endDate) {
+            event.setEndDate(endDate);
+
+            return this;
+        }
+        public Builder status(StatusType status) {
+            event.setStatus(status);
+
+            return this;
+        }
+        public Builder summary(String summary) {
+            event.setSummary(summary);
+
+            return this;
+        }
+        public Builder createdOn(LocalDateTime createdOn, TimeZone timeZone) {
+            event.setCreatedDate(createdOn, timeZone);
+
+            return this;
+        }
+        public Builder attendee(String name, String email) {
+            event.addAttendee(name, email);
+
+            return this;
+        }
+        public Builder attendee(String email) {
+            event.addAttendee(email);
+
+            return this;
+        }
+        public Builder repeats(FrequencyType repeatFrequency) {
+            event.setRepeatFrequency(repeatFrequency);
+
+            return this;
+        }
+        public Builder until(LocalDateTime until, TimeZone tz) {
+            event.setRepeatUntil(until, tz);
+
+            return this;
+        }
+        public Builder until(LocalDateTime untilUTC) {
+            event.setRepeatUntil(untilUTC);
+
+            return this;
+        }
+        public Builder repeatInterval(int repeatInterval) {
+            event.setRepeatInterval(repeatInterval);
+
+            return this;
+        }
+        public Builder repeatCount(int repeatCount) {
+            event.setRepeatCount(repeatCount);
+
+            return this;
+        }
+        public VEvent build() {
+            return event;
+        }
     }
 }
