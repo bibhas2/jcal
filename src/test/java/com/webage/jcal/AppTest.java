@@ -3,6 +3,7 @@ package com.webage.jcal;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.TimeZone;
 
@@ -63,6 +64,33 @@ public class AppTest {
 
         ev.setStartDateTime(LocalDateTime.of(2022, 11, 2, 9, 30), tz);
         ev.setEndDateTime(LocalDateTime.of(2022, 11, 2, 11, 30), tz);
+        ev.setOrganizer("Bibhas Bhattacharya", "bibhas.bhattacharya@webagesolutions.com");
+        ev.setUID("uid-001");
+        ev.setCreatedDate(LocalDateTime.of(2021, 10, 2, 9, 15), tz);
+        ev.setStatus(StatusType.CONFIRMED);
+        ev.setSummary("A test event, of immense importance.");
+
+        cal.addEvent(ev);
+
+        StringBuilder output = new StringBuilder();
+
+        cal.output(output);
+
+        System.out.println(output.toString());
+    }
+
+    @Test
+    public void testAllDayEvent() {
+        var cal = new VCalendar();
+        var tz = TimeZone.getTimeZone("America/New_York");
+        var ev = new VEvent();
+
+        //2 day long event
+        var startDate = LocalDate.of(2022, 11, 2);
+        var endDate = startDate.plusDays(2);
+        
+        ev.setStartDate(startDate);
+        ev.setEndDate(endDate);
         ev.setOrganizer("Bibhas Bhattacharya", "bibhas.bhattacharya@webagesolutions.com");
         ev.setUID("uid-001");
         ev.setCreatedDate(LocalDateTime.of(2021, 10, 2, 9, 15), tz);

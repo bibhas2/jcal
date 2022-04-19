@@ -1,5 +1,6 @@
 package com.webage.jcal;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
@@ -24,6 +25,11 @@ public class Util {
         .appendValue(ChronoField.YEAR, 4, 10, SignStyle.EXCEEDS_PAD)
         .appendValue(ChronoField.MONTH_OF_YEAR, 2)
         .appendValue(ChronoField.DAY_OF_MONTH, 2)
+        .toFormatter();
+    private static DateTimeFormatter localDateTimeFormatter = new DateTimeFormatterBuilder()
+        .appendValue(ChronoField.YEAR, 4, 10, SignStyle.EXCEEDS_PAD)
+        .appendValue(ChronoField.MONTH_OF_YEAR, 2)
+        .appendValue(ChronoField.DAY_OF_MONTH, 2)
         .appendLiteral("T")
         .appendValue(ChronoField.CLOCK_HOUR_OF_DAY, 2)
         .appendValue(ChronoField.MINUTE_OF_HOUR, 2)
@@ -37,8 +43,12 @@ public class Util {
         .appendLiteral("000000Z")
         .toFormatter();
 
-    public static String formatLocal(LocalDateTime dt, TimeZone tz) {
-        return String.format("TZID=%s:%s", tz.getID(), localDateFormatter.format(dt));
+    public static String formatLocalDateTime(LocalDateTime dt, TimeZone tz) {
+        return String.format("TZID=%s:%s", tz.getID(), localDateTimeFormatter.format(dt));
+    }
+
+    public static String formatLocalDate(LocalDate dt) {
+        return String.format("VALUE=DATE:%s", localDateFormatter.format(dt));
     }
 
     /**

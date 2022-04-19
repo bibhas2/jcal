@@ -1,5 +1,6 @@
 package com.webage.jcal;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.TimeZone;
@@ -50,13 +51,19 @@ public class VEvent {
         return startDateTime;
     }
     public void setStartDateTime(LocalDateTime startDateTime, TimeZone timeZone) {
-        this.startDateTime = Util.formatLocal(startDateTime, timeZone);
+        this.startDateTime = Util.formatLocalDateTime(startDateTime, timeZone);
+    }
+    public void setStartDate(LocalDate startDate) {
+        this.startDateTime = Util.formatLocalDate(startDate);
     }
     public Optional<String> getEndDateTime() {
         return endDateTime;
     }
     public void setEndDateTime(LocalDateTime endDateTime, TimeZone timeZone) {
-        this.endDateTime = Optional.of(Util.formatLocal(endDateTime, timeZone));
+        this.endDateTime = Optional.of(Util.formatLocalDateTime(endDateTime, timeZone));
+    }
+    public void setEndDate(LocalDate endDate) {
+        this.endDateTime = Optional.of(Util.formatLocalDate(endDate));
     }
     public int getSequence() {
         return sequence;
