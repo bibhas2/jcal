@@ -9,7 +9,7 @@ public class VEvent {
     Optional<String> description = Optional.empty();
     String uid;
     String startDateTime;
-    String endDateTime;
+    Optional<String> endDateTime = Optional.empty();
     Optional<String> createdDate = Optional.empty();
     String dateTimeStamp;
     int sequence;
@@ -52,11 +52,11 @@ public class VEvent {
     public void setStartDateTime(LocalDateTime startDateTime, TimeZone timeZone) {
         this.startDateTime = Util.formatLocal(startDateTime, timeZone);
     }
-    public String getEndDateTime() {
+    public Optional<String> getEndDateTime() {
         return endDateTime;
     }
     public void setEndDateTime(LocalDateTime endDateTime, TimeZone timeZone) {
-        this.endDateTime = Util.formatLocal(endDateTime, timeZone);;
+        this.endDateTime = Optional.of(Util.formatLocal(endDateTime, timeZone));
     }
     public int getSequence() {
         return sequence;
@@ -109,7 +109,12 @@ public class VEvent {
         sb.append("BEGIN:VEVENT\r\n");
 
         outputStartDate(sb);
-        outputEndDate(sb);
+
+        getEndDateTime().ifPresent(dt -> {
+            sb.append("DTEND;");
+            sb.append(dt);
+            sb.append("\r\n");
+        });
 
         sb.append(String.format("DTSTAMP:%s\r\n", getDateTimeStamp()));
 
@@ -126,12 +131,6 @@ public class VEvent {
         getDescription().ifPresent(d -> Util.outputProperty(sb, "DESCRIPTION:", d));
 
         sb.append("END:VEVENT\r\n");
-    }
-
-    private void outputEndDate(StringBuilder sb) {
-        sb.append("DTEND;");
-        sb.append(getEndDateTime());
-        sb.append("\r\n");
     }
 
     private void outputStartDate(StringBuilder sb) {
