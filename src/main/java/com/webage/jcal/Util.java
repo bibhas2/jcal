@@ -61,13 +61,20 @@ public class Util {
      * @param tz The timezone.
      * @return UTC formatted string. Example: 20201110T091030Z
      */
-    public static String formatUTC(LocalDateTime dt, TimeZone tz) {
+    public static String convertAndFormatUTC(LocalDateTime dt, TimeZone tz) {
         var local = dt.atZone(ZoneId.of(tz.getID()));
         var utcTime = local.withZoneSameInstant(ZoneOffset.UTC).toLocalDateTime();
         
         return utcDateFormatter.format(utcTime);
     }
 
+    /**
+     * Formats a date in UTC "Z" format. The date is expected to be already
+     * in UTC and no conversion is done.
+     * 
+     * @param dt
+     * @return
+     */
     public static String formatUTC(LocalDateTime dt) {
         return utcDateFormatter.format(dt);
     }

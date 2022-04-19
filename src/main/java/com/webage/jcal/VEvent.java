@@ -25,7 +25,7 @@ public class VEvent {
     private List<String> attendeeList = new ArrayList<>();
     
     VEvent() {
-        dateTimeStamp = Util.formatUTC(LocalDateTime.now(), TimeZone.getDefault());
+        dateTimeStamp = Util.convertAndFormatUTC(LocalDateTime.now(), TimeZone.getDefault());
     }
 
     public String getOrganizer() {
@@ -94,7 +94,7 @@ public class VEvent {
     }
 
     public void setCreatedDate(LocalDateTime createdOn, TimeZone timeZone) {
-        this.createdDate = Optional.of(Util.formatUTC(createdOn, timeZone));
+        this.createdDate = Optional.of(Util.convertAndFormatUTC(createdOn, timeZone));
     }
 
     public String getDateTimeStamp() {
@@ -158,7 +158,7 @@ public class VEvent {
     public void setRepeatCount(int repeatCount) {
         this.repeatCount = Optional.of(repeatCount);
     }
-    
+
     public void setRepeatCount(Optional<Integer> repeatCount) {
         this.repeatCount = repeatCount;
     }
