@@ -163,13 +163,14 @@ public class AppTest {
             .uid("uid-1")
             .organizer("abc", "xyz@example.com")
             .starts(LocalDateTime.of(2022, 11, 2, 9, 30), tz)
+            .ends(LocalDateTime.of(2022, 11, 2, 10, 0), tz)
             .summary("Test event")
             .build();
 
-        StringBuilder output = new StringBuilder();
+        var cal = VCalendar.builder()
+            .event(ev)
+            .build();
 
-        ev.output(output);
-
-        System.out.println(output.toString());
+        System.out.println(cal);
     }
 }

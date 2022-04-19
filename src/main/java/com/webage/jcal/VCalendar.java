@@ -46,4 +46,35 @@ public class VCalendar {
 
         sb.append("END:VCALENDAR\r\n");
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+
+        output(sb);
+
+        return sb.toString();
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static class Builder {
+        private VCalendar cal = new VCalendar();
+
+        public Builder method(MethodType method) {
+            cal.setMethod(method);
+
+            return this;
+        }
+        public Builder event(VEvent event) {
+            cal.addEvent(event);
+
+            return this;
+        }
+        public VCalendar build() {
+            return cal;
+        }
+    }
 }
