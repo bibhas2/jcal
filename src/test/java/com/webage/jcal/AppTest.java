@@ -167,10 +167,11 @@ public class AppTest {
             .summary("Test event")
             .build();
 
-        var cal = VCalendar.builder()
+        var str = VCalendar.builder()
             .event(ev)
-            .build();
+            .build()
+            .toString();
 
-        System.out.println(cal);
+            assertTrue(str.contains("DTSTART;TZID=America/New_York:20221102T093000\r\n"));
     }
 }
