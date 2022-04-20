@@ -3,8 +3,10 @@ package com.webage.jcal;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Base64;
 import java.util.Optional;
 import java.util.TimeZone;
 
@@ -142,7 +144,7 @@ public class AppTest {
 
         var str = output.toString();
 
-        assertTrue(str.contains("RRULE:FREQ=DAILY;COUNT=2;\r\n"));
+        assertTrue(str.contains("RRULE:FREQ=DAILY;COUNT=2\r\n"));
 
         output.setLength(0);
 
@@ -152,7 +154,7 @@ public class AppTest {
 
         str = output.toString();
         
-        assertTrue(str.contains("RRULE:FREQ=DAILY;UNTIL=20221104T040000Z;\r\n"));
+        assertTrue(str.contains("RRULE:FREQ=DAILY;UNTIL=20221104T040000Z\r\n"));
     }
 
     @Test
@@ -173,5 +175,34 @@ public class AppTest {
             .toString();
 
             assertTrue(str.contains("DTSTART;TZID=America/New_York:20221102T093000\r\n"));
+    }
+
+    @Test
+    public void testEmail() {
+        var tz = TimeZone.getTimeZone("America/New_York");
+        var ev = VEvent
+            .builder()
+            .uid("uid-4")
+            .organizer("abc", "xyz@example.com")
+            .starts(LocalDateTime.of(2022, 4, 24, 9, 0), tz)
+            .ends(LocalDateTime.of(2022, 4, 24, 9, 30), tz)
+            .repeatInterval(2)
+            .repeats(FrequencyType.DAILY)
+            .repeatCount(5)
+            // .until(LocalDateTime.of(2022, 4, 26, 0, 0))
+            .summary("Test event")
+            .build();
+
+        var str = VCalendar.builder()
+            .event(ev)
+            .build()
+            .toString();
+
+        System.out.println(str);
+
+        var enc = Base64.getEncoder().encode(str.getBytes(StandardCharsets.UTF_8));
+        var encStr = new String(enc, StandardCharsets.UTF_8);
+
+        System.out.println(encStr);
     }
 }
