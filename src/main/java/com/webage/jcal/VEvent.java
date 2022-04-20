@@ -15,7 +15,7 @@ public class VEvent {
     private Optional<String> endDateTime = Optional.empty();
     private Optional<String> createdDate = Optional.empty();
     private String dateTimeStamp;
-    private int sequence;
+    private Optional<Integer> sequence = Optional.empty();
     private Optional<String> summary = Optional.empty();
     private Optional<FrequencyType> repeatFrequency = Optional.empty();
     private Optional<LocalDateTime> repeatUntil = Optional.empty();
@@ -70,11 +70,11 @@ public class VEvent {
     public void setEndDate(LocalDate endDate) {
         this.endDateTime = Optional.of(Util.formatLocalDate(endDate));
     }
-    public int getSequence() {
+    public Optional<Integer> getSequence() {
         return sequence;
     }
     public void setSequence(int sequence) {
-        this.sequence = sequence;
+        this.sequence = Optional.of(sequence);
     }
     public Optional<StatusType> getStatus() {
         return status;
@@ -183,7 +183,7 @@ public class VEvent {
 
         getCreatedDate().ifPresent(c -> sb.append(String.format("CREATED:%s\r\n", c)));
 
-        sb.append(String.format("SEQUENCE:%d\r\n", getSequence()));
+        getSequence().ifPresent(s -> sb.append(String.format("SEQUENCE:%d\r\n", s)));
 
         getStatus().ifPresent(s -> sb.append(String.format("STATUS:%s\r\n", s.getStatus())));
 
@@ -198,10 +198,10 @@ public class VEvent {
     private void outputRepeatRule(StringBuilder sb) {
         getRepeatFrequency().ifPresent(f -> {
             sb.append("RRULE:");
-            sb.append(String.format("FREQ=%s;", f.getFrequency()));
-            getRepeatUntil().ifPresent(u -> sb.append(String.format("UNTIL=%s;", Util.formatUTC(u))));
-            getRepeatCount().ifPresent(c -> sb.append(String.format("COUNT=%d;", c)));
-            getRepeatInterval().ifPresent(i -> sb.append(String.format("INTERVAL=%d;", i)));
+            sb.append(String.format("FREQ=%s", f.getFrequency()));
+            getRepeatUntil().ifPresent(u -> sb.append(String.format(";UNTIL=%s", Util.formatUTC(u))));
+            getRepeatCount().ifPresent(c -> sb.append(String.format(";COUNT=%d", c)));
+            getRepeatInterval().ifPresent(i -> sb.append(String.format(";INTERVAL=%d", i)));
             sb.append("\r\n");
         });
     }
