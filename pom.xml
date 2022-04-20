@@ -6,7 +6,7 @@
   <packaging>jar</packaging>
   <version>1.0.0</version>
   <name>jcal</name>
-  <description>A small, dependency free iCal invite generator.</description>
+  <description>A small, dependency free iCalendar invite generator.</description>
   <url>https://github.com/bibhas2/jcal</url>
 
   <licenses>
