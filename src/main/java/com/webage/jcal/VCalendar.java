@@ -27,8 +27,6 @@ public class VCalendar {
         this.eventList = eventList;
     }
     public void addEvent(VEvent event) {
-        event.setSequence(getEventList().size() + 1);
-
         getEventList().add(event);
     }
 
