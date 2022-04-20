@@ -31,7 +31,7 @@ public class Util {
         .appendValue(ChronoField.MONTH_OF_YEAR, 2)
         .appendValue(ChronoField.DAY_OF_MONTH, 2)
         .appendLiteral("T")
-        .appendValue(ChronoField.CLOCK_HOUR_OF_DAY, 2)
+        .appendValue(ChronoField.HOUR_OF_DAY, 2)
         .appendValue(ChronoField.MINUTE_OF_HOUR, 2)
         .appendLiteral("00")
         .toFormatter();
@@ -40,7 +40,7 @@ public class Util {
         .appendValue(ChronoField.MONTH_OF_YEAR, 2)
         .appendValue(ChronoField.DAY_OF_MONTH, 2)
         .appendLiteral("T")
-        .appendValue(ChronoField.CLOCK_HOUR_OF_DAY, 2)
+        .appendValue(ChronoField.HOUR_OF_DAY, 2)
         .appendValue(ChronoField.MINUTE_OF_HOUR, 2)
         .appendLiteral("00Z")
         .toFormatter();
