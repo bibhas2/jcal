@@ -1,5 +1,9 @@
 package com.webage.jcal;
 
+import java.io.ByteArrayInputStream;
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,6 +56,21 @@ public class VCalendar {
         output(sb);
 
         return sb.toString();
+    }
+
+    public ByteArrayInputStream toInputStream() {
+        var buff = toUTF8();
+        
+        return new ByteArrayInputStream(buff.array(), 0, buff.limit());
+    }
+
+    public ByteBuffer toUTF8() {
+        StringBuilder sb = new StringBuilder();
+
+        output(sb);
+
+        return StandardCharsets.UTF_8
+            .encode(CharBuffer.wrap(sb));
     }
 
     public static Builder builder() {

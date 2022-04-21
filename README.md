@@ -41,6 +41,11 @@ public void basicEvent() {
 Add a dependency to your ``pom.xml``.
 
 ```xml
+<dependency>
+  <groupId>io.github.bibhas2</groupId>
+  <artifactId>jcal</artifactId>
+  <version>1.0.1</version>
+</dependency>
 
 ```
 
