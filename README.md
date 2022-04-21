@@ -1,4 +1,4 @@
-# jcal a iCalendar Invite Generator for Java
+# iCalendar Invite Generator for Java
 
 [iCalendar](https://www.ietf.org/rfc/rfc2445.txt) is a comprehensive specififcation that can be difficult to understand at times. It also has some strange requirements like line length limit that seem archaic by today's standard. Generating a basic iCalendar invite can become a daunting task. This is why we created ``jcal``. It makes it super easy to generate an invite that you can then send via e-mail.
 
@@ -51,6 +51,15 @@ Add a dependency to your ``pom.xml``.
 
 ## Cookbook
 jcal was designed to achieve common scenarios easily. Below are some of these scenarios.
+
+### Mandatory Fields
+The following fields of an event are mandatory.
+
+- UID - A globally unique ID for the event.
+- Organizer - You can supply a name and email. An RSVP from a invitee is emailed back to this address.
+- Start date and time. If you do not supply an end date and time then a task or reminder type event is created.
+
+Although, summary is not a mandatory property, it is highly recommended that you supply a summary. This short title shows up in the recipient's calendar.
 
 ### Invite Attendees
 
@@ -138,3 +147,44 @@ public void multipleEvents() {
         .toString();
 }
 ```
+
+### Daily Repeating Event
+The following will create an event that repeats 3 days in a row.
+
+- April 24, 2022 from 9:00AM to 9:30AM Eastern Time.
+- April 25, 2022 from 9:00AM to 9:30AM Eastern Time.
+- April 26, 2022 from 9:00AM to 9:30AM Eastern Time.
+
+Notice how the start ane end date/time are for the first day only.
+
+```java
+var tz = TimeZone.getTimeZone("America/New_York");
+var ev = VEvent
+    .builder()
+    .uid("uid-4")
+    .organizer("abc", "xyz@example.com")
+    .starts(LocalDateTime.of(2022, 4, 24, 9, 0), tz)
+    .ends(LocalDateTime.of(2022, 4, 24, 9, 30), tz)
+    .repeats(FrequencyType.DAILY)
+    .repeatCount(3)
+    .summary("Test event")
+    .build();
+```
+
+The same can be achieved by supplying a repeat until date. In the example above, we should set the repeat until date to the beginning of April 27th, 2022.
+
+```java
+var tz = TimeZone.getTimeZone("America/New_York");
+var ev = VEvent
+    .builder()
+    .uid("uid-4")
+    .organizer("abc", "xyz@example.com")
+    .starts(LocalDateTime.of(2022, 4, 24, 9, 0), tz)
+    .ends(LocalDateTime.of(2022, 4, 24, 9, 30), tz)
+    .repeats(FrequencyType.DAILY)
+    .until(LocalDateTime.of(2022, 4, 27, 0, 0), tz)
+    .summary("Test event")
+    .build();
+```
+
+Note: iCalendar takes the until date and time in UTC only. Here jcal will correctly convert the time from the given time zone to UTC.
