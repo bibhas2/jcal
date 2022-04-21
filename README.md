@@ -1,6 +1,6 @@
 # iCalendar Invite Generator for Java
 
-[iCalendar](https://www.ietf.org/rfc/rfc2445.txt) is a comprehensive specififcation that can be difficult to understand at times. It also has a few strange requirements like line length limit that seem archaic by today's standard. Generating a basic iCalendar invite can become a daunting task. This is why we created ``jcal``. This package makes it super easy to generate an invite that you can then send via e-mail.
+[iCalendar](https://www.ietf.org/rfc/rfc2445.txt) is a comprehensive specification that can be difficult to understand at times. It also has a few strange requirements like line length limit that seem archaic by today's standard. On top of that, email clients like Gmail and Outlook are unforgiving when it comes to parsing an iCalendar request. Generating a correct iCalendar invite can become a daunting task. This is why we created ``jcal``. This package makes it super easy to generate an invite that you can then send via e-mail.
 
 ## Project Goals
 
@@ -33,7 +33,27 @@ public void basicEvent() {
         .event(ev)
         .build()
         .toString();
+    
+    System.out.println(iCal);
 }
+```
+
+This will output:
+
+```
+VERSION:2.0
+CALSCALE:GREGORIAN
+METHOD:REQUEST
+BEGIN:VEVENT
+DTSTART;TZID=America/New_York:20221102T093000
+DTEND;TZID=America/New_York:20221102T100000
+DTSTAMP:20220421T191400Z
+ORGANIZER;CN=abc:mailto:xyz@example.com
+UID:uid-1
+STATUS:CONFIRMED
+SUMMARY:Test event
+END:VEVENT
+END:VCALENDAR
 ```
 
 ## Using jcal
