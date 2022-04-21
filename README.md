@@ -1,6 +1,6 @@
 # iCalendar Invite Generator for Java
 
-[iCalendar](https://www.ietf.org/rfc/rfc2445.txt) is a comprehensive specififcation that can be difficult to understand at times. It also has some strange requirements like line length limit that seem archaic by today's standard. Generating a basic iCalendar invite can become a daunting task. This is why we created ``jcal``. It makes it super easy to generate an invite that you can then send via e-mail.
+[iCalendar](https://www.ietf.org/rfc/rfc2445.txt) is a comprehensive specififcation that can be difficult to understand at times. It also has a few strange requirements like line length limit that seem archaic by today's standard. Generating a basic iCalendar invite can become a daunting task. This is why we created ``jcal``. This package makes it super easy to generate an invite that you can then send via e-mail.
 
 ## Project Goals
 
@@ -57,13 +57,13 @@ The following fields of an event are mandatory.
 
 - UID - A globally unique ID for the event.
 - Organizer - You can supply a name and email. An RSVP from a invitee is emailed back to this address.
-- Start date and time. If you do not supply an end date and time then a task or reminder type event is created.
+- Start date and time. While this is mandatory, the end date and time is not. If you do not supply an end date and time then a reminder or task type event is created that does not occupy any space in the calendar.
 
 Although, summary is not a mandatory property, it is highly recommended that you supply a summary. This short title shows up in the recipient's calendar.
 
-### Invite Attendees
+### Add Attendees to an Event
 
-Use the ``attendee()`` method to add attendees to an event.
+Use the ``attendee()`` method of the builder to add attendees to an event.
 
 ```java
 import com.webage.jcal.*;
@@ -89,7 +89,7 @@ public void eventWithAttendees() {
 ```
 
 ### Day Long Event
-To create a day long event supply ``LocalDate`` to ``starts()`` and ``ends()``. Note: icalendar does not take a time zone reference for day long events.
+To create a day long event supply ``LocalDate`` (instead of ``LocaldateTime``) to the ``starts()`` and ``ends()`` methods. Note: iCalendar does not take a time zone reference for day long events.
 
 The following will create a two day long event for:
 
@@ -116,6 +116,8 @@ public void dayLongEvent() {
         .toString();
 }
 ```
+
+Note, how the end date is actually Nov 4, 2022. Basically, the event ends at the beginning of Nov 4.
 
 ### Multiple Events
 The following adds two events:
@@ -158,7 +160,7 @@ The following will create an event that repeats 3 days in a row.
 - April 25, 2022 from 9:00AM to 9:30AM Eastern Time.
 - April 26, 2022 from 9:00AM to 9:30AM Eastern Time.
 
-Notice how the start ane end date/time are for the first day only.
+Notice how the start and end date/time are for the first day only.
 
 ```java
 var tz = TimeZone.getTimeZone("America/New_York");
