@@ -91,7 +91,10 @@ public void eventWithAttendees() {
 ### Day Long Event
 To create a day long event supply ``LocalDate`` to ``starts()`` and ``ends()``. Note: icalendar does not take a time zone reference for day long events.
 
-The following will create a two day long event for Nov 11, 2022 and Nov 12, 2022.
+The following will create a two day long event for:
+
+- Nov 2, 2022 and 
+- Nov 3, 2022.
 
 ```java
 public void dayLongEvent() {

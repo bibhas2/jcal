@@ -219,96 +219,232 @@ public class VEvent {
     public static class Builder {
         private VEvent event = new VEvent();
 
-        public Builder organizer(String organizer) {
-            event.setOrganizer(organizer);
+        /**
+         * Sets the organizer of the event. This field is mandatory.
+         * 
+         * @param organizerEmail The email address of the organizer.
+         * @return
+         */
+        public Builder organizer(String organizerEmail) {
+            event.setOrganizer(organizerEmail);
 
             return this;
         }
+        /**
+         * Sets the name and email of the organizer. This field is mandatory.
+         * 
+         * @param name The name of the organizer.
+         * @param email The email address of the organizer.
+         * @return
+         */
         public Builder organizer(String name, String email) {
             event.setOrganizer(name, email);
 
             return this;
         }
+
+        /**
+         * Sets a detailed description of the event.
+         * 
+         * @param description
+         * @return
+         */
         public Builder description(String description) {
             event.setDescription(description);
 
             return this;
         }
+
+        /**
+         * Sets the globally unique ID of the event. This field is mandatory.
+         * 
+         * @param uid
+         * @return
+         */
         public Builder uid(String uid) {
             event.setUID(uid);
 
             return this;
         }
+
+        /**
+         * Sets the start date and time of the event.
+         * 
+         * @param startDateTime the start date and time.
+         * @param timeZone The time zone of the event.
+         * @return
+         */
         public Builder starts(LocalDateTime startDateTime, TimeZone timeZone) {
             event.setStartDateTime(startDateTime, timeZone);
 
             return this;
         }
+
+        /**
+         * Sets the start date of the event. Use this to create a day long event.
+         * Please note that iCalendar does not take a time zone for day long event.
+         * 
+         * @param startDate The start date of a day long event.
+         * @return
+         */
         public Builder starts(LocalDate startDate) {
             event.setStartDate(startDate);
 
             return this;
         }
+
+        /**
+         * Sets the end date and time of an event.
+         * 
+         * @param endDateTime the end date and time.
+         * @param timeZone The time zone of the event.
+         * @return
+         */
         public Builder ends(LocalDateTime endDateTime, TimeZone timeZone) {
             event.setEndDateTime(endDateTime, timeZone);
 
             return this;
         }
+
+        /**
+         * Sets the end date of a day long event. This date is exclusive.
+         * For example, if the last day of the event is Nov 2, 2022, then
+         * you should set this date to Nov 3, 2022.
+         * 
+         * @param endDate
+         * @return
+         */
         public Builder ends(LocalDate endDate) {
             event.setEndDate(endDate);
 
             return this;
         }
+
+        /**
+         * The status of the event. Default is StatusType.CONFIRMED.
+         * 
+         * @param status
+         * @return
+         */
         public Builder status(StatusType status) {
             event.setStatus(status);
 
             return this;
         }
+
+        /**
+         * Set a short summary for the event. 
+         * 
+         * @param summary
+         * @return
+         */
         public Builder summary(String summary) {
             event.setSummary(summary);
 
             return this;
         }
+
+        /**
+         * Set when this event was created in your backend system.
+         * 
+         * @param createdOn
+         * @param timeZone
+         * @return
+         */
         public Builder createdOn(LocalDateTime createdOn, TimeZone timeZone) {
             event.setCreatedDate(createdOn, timeZone);
 
             return this;
         }
+
+        /**
+         * Add a new attendee to the event.
+         * 
+         * @param name
+         * @param email
+         * @return
+         */
         public Builder attendee(String name, String email) {
             event.addAttendee(name, email);
 
             return this;
         }
+
+        /**
+         * Add a new attendee to the event.
+         * 
+         * @param email
+         * @return
+         */
         public Builder attendee(String email) {
             event.addAttendee(email);
 
             return this;
         }
+
+        /**
+         * Sets the repeat frequency of the event.
+         * 
+         * @param repeatFrequency
+         * @return
+         */
         public Builder repeats(FrequencyType repeatFrequency) {
             event.setRepeatFrequency(repeatFrequency);
 
             return this;
         }
+
+        /**
+         * Sets how long the event will keep repeating. The event will no longer
+         * repeat after this date and time. Note: iCalendar takes the UNTIL property
+         * in UTC only. Here, the method will convert the date and time to UTC for you.
+         * 
+         * @param until The date and time.
+         * @param tz The time zone. 
+         * @return
+         */
         public Builder until(LocalDateTime until, TimeZone tz) {
             event.setRepeatUntil(until, tz);
 
             return this;
         }
+
+        /**
+         * Sets how long the event will keep repeating. The event will no longer
+         * repeat after this date and time. The date and time is specified in UTC.
+         * 
+         * @param untilUTC
+         * @return
+         */
         public Builder until(LocalDateTime untilUTC) {
             event.setRepeatUntil(untilUTC);
 
             return this;
         }
+
         public Builder repeatInterval(int repeatInterval) {
             event.setRepeatInterval(repeatInterval);
 
             return this;
         }
+
+        /**
+         * How many times the event will repeat. Either set this or the until date but not both.
+         * 
+         * @param repeatCount
+         * @return
+         */
         public Builder repeatCount(int repeatCount) {
             event.setRepeatCount(repeatCount);
 
             return this;
         }
+
+        /**
+         * Returns a fully constructed and initialized event.
+         * 
+         * @return
+         */
         public VEvent build() {
             return event;
         }
