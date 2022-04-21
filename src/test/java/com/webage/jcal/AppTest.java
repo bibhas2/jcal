@@ -167,6 +167,8 @@ public class AppTest {
             .starts(LocalDateTime.of(2022, 11, 2, 9, 30), tz)
             .ends(LocalDateTime.of(2022, 11, 2, 10, 0), tz)
             .summary("Test event")
+            .attendee("Bugs Bunny", "bugs.bunny@wb.com")
+            .attendee("daffy.duck@wb.com")
             .build();
 
         var str = VCalendar.builder()
@@ -174,7 +176,7 @@ public class AppTest {
             .build()
             .toString();
 
-            assertTrue(str.contains("DTSTART;TZID=America/New_York:20221102T093000\r\n"));
+        assertTrue(str.contains("DTSTART;TZID=America/New_York:20221102T093000\r\n"));
     }
 
     @Test
@@ -204,5 +206,35 @@ public class AppTest {
         var encStr = new String(enc, StandardCharsets.UTF_8);
 
         System.out.println(encStr);
+    }
+
+    @Test
+    public void multipleEvents() {
+        var tz = TimeZone.getTimeZone("America/New_York");
+        var ev1 = VEvent
+            .builder()
+            .uid("uid-1")
+            .organizer("abc", "xyz@example.com")
+            .starts(LocalDateTime.of(2022, 11, 2, 9, 30), tz)
+            .ends(LocalDateTime.of(2022, 11, 2, 10, 0), tz)
+            .summary("Test event 1")
+            .build();
+        var ev2 = VEvent
+            .builder()
+            .uid("uid-2")
+            .organizer("abc", "xyz@example.com")
+            .starts(LocalDateTime.of(2022, 11, 5, 16, 30), tz)
+            .ends(LocalDateTime.of(2022, 11, 5, 17, 0), tz)
+            .summary("Test event 2")
+            .build();
+    
+        var str = VCalendar.builder()
+            .event(ev1)
+            .event(ev2)
+            .build()
+            .toString();
+
+        assertTrue(str.contains("DTSTART;TZID=America/New_York:20221102T093000\r\n"));
+        assertTrue(str.contains("DTSTART;TZID=America/New_York:20221105T163000\r\n"));
     }
 }
