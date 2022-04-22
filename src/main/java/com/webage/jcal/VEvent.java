@@ -32,8 +32,8 @@ public class VEvent {
         return organizer;
     }
 
-    public void setOrganizer(String organizer) {
-        this.organizer = organizer;
+    public void setOrganizer(String organizerEmail) {
+        this.organizer = String.format("CN=%s:mailto:%s", organizerEmail, organizerEmail);
     }
 
     public void setOrganizer(String name, String email) {

@@ -56,6 +56,8 @@ END:VEVENT
 END:VCALENDAR
 ```
 
+Note: iCalendar requires each line to end with "\r\n" (CRLF). jcal will do this for you. But care must be taken not to alter the line endings when attaching the calendar in an email. To be safe always base64 encode the mail attachment. 
+
 ## Using jcal
 
 Add a dependency to your ``pom.xml``.
