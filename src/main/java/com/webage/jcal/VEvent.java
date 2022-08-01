@@ -23,6 +23,8 @@ public class VEvent {
     private Optional<Integer> repeatCount = Optional.empty();
     private Optional<StatusType> status = Optional.of(StatusType.CONFIRMED);
     private List<String> attendeeList = new ArrayList<>();
+    private Optional<String> location = Optional.empty();
+    private Optional<String> locationURL = Optional.empty();
     
     VEvent() {
         dateTimeStamp = Util.convertAndFormatUTC(LocalDateTime.now(), TimeZone.getDefault());
@@ -163,6 +165,22 @@ public class VEvent {
         this.repeatCount = repeatCount;
     }
 
+    public Optional<String> getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = Optional.of(location);
+    }
+
+    public Optional<String> getLocationURL() {
+        return locationURL;
+    }
+
+    public void setLocationURL(String locationURL) {
+        this.locationURL = Optional.of(locationURL);
+    }
+
     public void output(StringBuilder sb) {
         sb.append("BEGIN:VEVENT\r\n");
 
@@ -191,6 +209,15 @@ public class VEvent {
         getDescription().ifPresent(d -> Util.outputProperty(sb, "DESCRIPTION:", d));
 
         getAttendeeList().forEach(a -> Util.outputProperty(sb, "ATTENDEE;ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION;RSVP=TRUE;", a));
+
+        getLocation().ifPresent(loc -> {
+            getLocationURL().ifPresentOrElse(locURL -> {
+                Util.outputProperty(sb, String.format("LOCATION;ALTREP=\"%s\":", locURL), loc);
+            },
+            () -> {
+                Util.outputProperty(sb, "LOCATION:", loc);
+            });
+        });
 
         sb.append("END:VEVENT\r\n");
     }
@@ -436,6 +463,31 @@ public class VEvent {
          */
         public Builder repeatCount(int repeatCount) {
             event.setRepeatCount(repeatCount);
+
+            return this;
+        }
+
+        /**
+         * Set the location information.
+         * 
+         * @param location The name of the location. For example an address.
+         * @return
+         */
+        public Builder location(String location) {
+            event.setLocation(location);
+
+            return this;
+        }
+
+        /**
+         * Sets the location name and a link URL.
+         * @param location The location name
+         * @param locationURL A URL that has more information about the location. For example, a Google Maps link.
+         * @return
+         */
+        public Builder location(String location, String locationURL) {
+            event.setLocation(location);
+            event.setLocationURL(locationURL);
 
             return this;
         }

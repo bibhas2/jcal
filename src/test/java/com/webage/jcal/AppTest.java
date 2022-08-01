@@ -3,6 +3,7 @@ package com.webage.jcal;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.nio.CharBuffer;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -184,28 +185,19 @@ public class AppTest {
         var tz = TimeZone.getTimeZone("America/New_York");
         var ev = VEvent
             .builder()
-            .uid("uid-4")
+            .uid("uid-1")
             .organizer("abc", "xyz@example.com")
-            .starts(LocalDateTime.of(2022, 4, 24, 9, 0), tz)
-            .ends(LocalDateTime.of(2022, 4, 24, 9, 30), tz)
-            .repeatInterval(2)
-            .repeats(FrequencyType.DAILY)
-            .repeatCount(5)
-            // .until(LocalDateTime.of(2022, 4, 26, 0, 0))
+            .starts(LocalDateTime.of(2022, 11, 2, 9, 30), tz)
+            .ends(LocalDateTime.of(2022, 11, 2, 10, 0), tz)
             .summary("Test event")
             .build();
-
-        var str = VCalendar.builder()
+    
+        var iCal = VCalendar.builder()
             .event(ev)
             .build()
             .toString();
-
-        System.out.println(str);
-
-        var enc = Base64.getEncoder().encode(str.getBytes(StandardCharsets.UTF_8));
-        var encStr = new String(enc, StandardCharsets.UTF_8);
-
-        System.out.println(encStr);
+        System.out.println(iCal);
+        // System.out.println(new String(Base64.getEncoder().encode(b), StandardCharsets.UTF_8));
     }
 
     @Test
@@ -236,5 +228,47 @@ public class AppTest {
 
         assertTrue(str.contains("DTSTART;TZID=America/New_York:20221102T093000\r\n"));
         assertTrue(str.contains("DTSTART;TZID=America/New_York:20221105T163000\r\n"));
+    }
+
+    @Test
+    public void testLocation() {
+        var tz = TimeZone.getTimeZone("America/New_York");
+        var ev = VEvent
+            .builder()
+            .uid("uid-1")
+            .organizer("abc", "xyz@example.com")
+            .starts(LocalDateTime.of(2022, 10, 21, 17, 30), tz)
+            .ends(LocalDateTime.of(2022, 10, 21, 20, 30), tz)
+            .summary("Test event")
+            .location("TEST LOCATION")
+            .build();
+
+        var str = VCalendar.builder()
+            .event(ev)
+            .build()
+            .toString();
+
+        assertTrue(str.contains("LOCATION:TEST LOCATION\r\n"));
+    }
+
+    @Test
+    public void testLocationURL() {
+        var tz = TimeZone.getTimeZone("America/New_York");
+        var ev = VEvent
+            .builder()
+            .uid("uid-1")
+            .organizer("abc", "xyz@example.com")
+            .starts(LocalDateTime.of(2022, 10, 21, 17, 30), tz)
+            .ends(LocalDateTime.of(2022, 10, 21, 20, 30), tz)
+            .summary("Test event")
+            .location("TEST LOCATION", "https://goo.gl/maps/MzhntySdbstb7Yfd8")
+            .build();
+
+        var str = VCalendar.builder()
+            .event(ev)
+            .build()
+            .toString();
+
+        assertTrue(str.contains("LOCATION;ALTREP=\"https://goo.gl/maps/MzhntySdbstb7Yfd8\":TEST LOCATION\r\n"));
     }
 }
