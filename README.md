@@ -66,7 +66,7 @@ Add a dependency to your ``pom.xml``.
 <dependency>
   <groupId>io.github.bibhas2</groupId>
   <artifactId>jcal</artifactId>
-  <version>1.0.1</version>
+  <version>1.1.0</version>
 </dependency>
 
 ```
@@ -215,3 +215,34 @@ var ev = VEvent
 ```
 
 Note: iCalendar takes the until date and time in UTC only. Here jcal will correctly convert the time from the given time zone to UTC.
+
+### Set Location
+You can supply a name or address of a location like this.
+
+```java
+var tz = TimeZone.getTimeZone("America/New_York");
+var ev = VEvent
+    .builder()
+    .uid("uid-4")
+    .organizer("abc", "xyz@example.com")
+    .starts(LocalDateTime.of(2022, 4, 24, 9, 0), tz)
+    .ends(LocalDateTime.of(2022, 4, 24, 9, 30), tz)
+    .summary("Test event")
+    .location("First St SE, Washington, DC 20004")
+    .build();
+```
+
+Optionally, you can supply a URL link that has more information about the location. For example, a Google Maps link.
+
+```java
+var tz = TimeZone.getTimeZone("America/New_York");
+var ev = VEvent
+    .builder()
+    .uid("uid-4")
+    .organizer("abc", "xyz@example.com")
+    .starts(LocalDateTime.of(2022, 4, 24, 9, 0), tz)
+    .ends(LocalDateTime.of(2022, 4, 24, 9, 30), tz)
+    .summary("Test event")
+    .location("First St SE, Washington, DC 20004", "https://goo.gl/maps/MzhntySdbstb7Yfd8")
+    .build();
+```
