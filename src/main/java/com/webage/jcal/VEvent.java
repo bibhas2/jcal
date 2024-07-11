@@ -60,6 +60,9 @@ public class VEvent {
     public void setStartDateTime(LocalDateTime startDateTime, TimeZone timeZone) {
         this.startDateTime = Util.formatLocalDateTime(startDateTime, timeZone);
     }
+    public void setStartDateTime(LocalDateTime startDateTime, String timeZoneId) {
+        this.startDateTime = Util.formatLocalDateTime(startDateTime, timeZoneId);
+    }
     public void setStartDate(LocalDate startDate) {
         this.startDateTime = Util.formatLocalDate(startDate);
     }
@@ -68,6 +71,9 @@ public class VEvent {
     }
     public void setEndDateTime(LocalDateTime endDateTime, TimeZone timeZone) {
         this.endDateTime = Optional.of(Util.formatLocalDateTime(endDateTime, timeZone));
+    }
+    public void setEndDateTime(LocalDateTime endDateTime, String timeZoneId) {
+        this.endDateTime = Optional.of(Util.formatLocalDateTime(endDateTime, timeZoneId));
     }
     public void setEndDate(LocalDate endDate) {
         this.endDateTime = Optional.of(Util.formatLocalDate(endDate));
@@ -306,6 +312,17 @@ public class VEvent {
 
             return this;
         }
+        /**
+         * Sets the start date and time of the event using a time zone ID defined in the VCalendar.
+         * @param startDateTime the start date and time
+         * @param timeZoneId the time zone ID as defined in the VCalendar
+         * @return
+         */
+        public Builder starts(LocalDateTime startDateTime, String timeZoneId) {
+            event.setStartDateTime(startDateTime, timeZoneId);
+
+            return this;
+        }
 
         /**
          * Sets the start date of the event. Use this to create a day long event.
@@ -329,6 +346,17 @@ public class VEvent {
          */
         public Builder ends(LocalDateTime endDateTime, TimeZone timeZone) {
             event.setEndDateTime(endDateTime, timeZone);
+
+            return this;
+        }
+        /**
+         * Sets the end date and time of an event using a time zone ID defined in the VCalendar.
+         * @param endDateTime
+         * @param timeZoneId the time zone ID defined in the VCalendar
+         * @return
+         */
+        public Builder ends(LocalDateTime endDateTime, String timeZoneId) {
+            event.setEndDateTime(endDateTime, timeZoneId);
 
             return this;
         }

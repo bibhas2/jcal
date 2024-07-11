@@ -46,7 +46,11 @@ public class Util {
         .toFormatter();
 
     public static String formatLocalDateTime(LocalDateTime dt, TimeZone tz) {
-        return String.format("TZID=%s:%s", tz.getID(), localDateTimeFormatter.format(dt));
+        return formatLocalDateTime(dt, tz.getID());
+    }
+
+    public static String formatLocalDateTime(LocalDateTime dt, String tzId) {
+        return String.format("TZID=%s:%s", tzId, localDateTimeFormatter.format(dt));
     }
 
     public static String formatLocalDate(LocalDate dt) {

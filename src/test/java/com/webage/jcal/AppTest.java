@@ -3,11 +3,11 @@ package com.webage.jcal;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.nio.CharBuffer;
-import java.nio.charset.StandardCharsets;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Base64;
 import java.util.Optional;
 import java.util.TimeZone;
 
@@ -178,6 +178,50 @@ public class AppTest {
             .toString();
 
         assertTrue(str.contains("DTSTART;TZID=America/New_York:20221102T093000\r\n"));
+    }
+
+    @Test
+    public void testVTimeZone() throws FileNotFoundException, IOException {
+        String vTimeZone = "BEGIN:VTIMEZONE\r\n" + 
+            "TZID:Romance Standard Time\r\n" + 
+            "BEGIN:STANDARD\r\n" + 
+            "DTSTART:16010101T030000\r\n" + 
+            "TZOFFSETFROM:+0200\r\n" + 
+            "TZOFFSETTO:+0100\r\n" + 
+            "RRULE:FREQ=YEARLY;INTERVAL=1;BYDAY=-1SU;BYMONTH=10\r\n" + 
+            "END:STANDARD\r\n" + 
+            "BEGIN:DAYLIGHT\r\n" + 
+            "DTSTART:16010101T020000\r\n" + 
+            "TZOFFSETFROM:+0100\r\n" + 
+            "TZOFFSETTO:+0200\r\n" + 
+            "RRULE:FREQ=YEARLY;INTERVAL=1;BYDAY=-1SU;BYMONTH=3\r\n" + 
+            "END:DAYLIGHT\r\n" + 
+            "END:VTIMEZONE\r\n";
+
+        var ev = VEvent
+            .builder()
+            .uid("uid-1")
+            .organizer("abc", "xyz@example.com")
+            .starts(LocalDateTime.of(2024, 10, 25, 9, 30), "Romance Standard Time")
+            .ends(LocalDateTime.of(2024, 10, 25, 16, 0), "Romance Standard Time")
+            .repeats(FrequencyType.DAILY)
+            .until(LocalDateTime.of(2024, 10, 29, 16, 0))
+            .summary("Test event")
+            .attendee("Bugs Bunny", "bugs.bunny@wb.com")
+            .attendee("daffy.duck@wb.com")
+            .build();
+
+        var str = VCalendar.builder()
+            .vTimeZone(vTimeZone)
+            .event(ev)
+            .build()
+            .toString();
+
+        try (var fs = new FileOutputStream("test.ics")) {
+            fs.write(str.getBytes());
+
+            fs.flush();
+        }
     }
 
     @Test

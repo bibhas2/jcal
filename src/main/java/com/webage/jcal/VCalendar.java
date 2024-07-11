@@ -6,11 +6,13 @@ import java.nio.CharBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class VCalendar {
     private MethodType method = MethodType.REQUEST;
     private String productId = "jcal";
     private List<VEvent> eventList = new ArrayList<>();
+    private Optional<String> vTimeZone = Optional.empty();
 
     public MethodType getMethod() {
         return method;
@@ -33,6 +35,15 @@ public class VCalendar {
     public void addEvent(VEvent event) {
         getEventList().add(event);
     }
+    public Optional<String> getVTimeZone() {
+        return vTimeZone;
+    }
+    public void setVTimeZone(Optional<String> vTimeZone) {
+        this.vTimeZone = vTimeZone;
+    }
+    public void setVTimeZone(String vTimeZone) {
+        this.vTimeZone = Optional.of(vTimeZone);
+    }
 
     public void output(StringBuilder sb) {
         sb.append("BEGIN:VCALENDAR\r\n");
@@ -44,6 +55,10 @@ public class VCalendar {
 
         sb.append(String.format("METHOD:%s\r\n", getMethod().getMethod()));
 
+        vTimeZone.ifPresent(tz -> {
+            sb.append(tz);
+        });
+        
         getEventList().forEach(event -> event.output(sb));
 
         sb.append("END:VCALENDAR\r\n");
@@ -87,6 +102,11 @@ public class VCalendar {
         }
         public Builder event(VEvent event) {
             cal.addEvent(event);
+
+            return this;
+        }
+        public Builder vTimeZone(String vTimeZone) {
+            cal.setVTimeZone(vTimeZone);
 
             return this;
         }
