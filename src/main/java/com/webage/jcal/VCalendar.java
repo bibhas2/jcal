@@ -12,7 +12,7 @@ public class VCalendar {
     private MethodType method = MethodType.REQUEST;
     private String productId = "jcal";
     private List<VEvent> eventList = new ArrayList<>();
-    private Optional<String> vTimeZone = Optional.empty();
+    private List<String> vTimeZones = new ArrayList<>();
 
     public MethodType getMethod() {
         return method;
@@ -35,14 +35,18 @@ public class VCalendar {
     public void addEvent(VEvent event) {
         getEventList().add(event);
     }
-    public Optional<String> getVTimeZone() {
-        return vTimeZone;
+    public List<String> getVTimeZones() {
+        return vTimeZones;
     }
-    public void setVTimeZone(Optional<String> vTimeZone) {
-        this.vTimeZone = vTimeZone;
+    public void setVTimeZones(List<String> vTimeZones) {
+        this.vTimeZones = vTimeZones;
     }
-    public void setVTimeZone(String vTimeZone) {
-        this.vTimeZone = Optional.of(vTimeZone);
+    public void addVTimeZone(String vTimeZone) {
+        this.vTimeZones.add(vTimeZone);
+    }
+
+    public void addOutlookTimeZone(OutlookTimeZone tz) {
+        this.vTimeZones.add(tz.toVTimeZone());
     }
 
     public void output(StringBuilder sb) {
@@ -55,10 +59,10 @@ public class VCalendar {
 
         sb.append(String.format("METHOD:%s\r\n", getMethod().getMethod()));
 
-        vTimeZone.ifPresent(tz -> {
+        vTimeZones.forEach(tz -> {
             sb.append(tz);
         });
-        
+
         getEventList().forEach(event -> event.output(sb));
 
         sb.append("END:VCALENDAR\r\n");
@@ -106,7 +110,12 @@ public class VCalendar {
             return this;
         }
         public Builder vTimeZone(String vTimeZone) {
-            cal.setVTimeZone(vTimeZone);
+            cal.addVTimeZone(vTimeZone);
+
+            return this;
+        }
+        public Builder outlookVTimeZone(OutlookTimeZone tz) {
+            cal.addOutlookTimeZone(tz);
 
             return this;
         }

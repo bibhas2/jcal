@@ -225,6 +225,34 @@ public class AppTest {
     }
 
     @Test
+    public void testOutlookTimeZone() throws FileNotFoundException, IOException {
+        var ev = VEvent
+            .builder()
+            .uid("uid-1")
+            .organizer("abc", "xyz@example.com")
+            .starts(LocalDateTime.of(2024, 10, 25, 9, 30), OutlookTimeZone.TZ_ROMANCE_STANDARD_TIME)
+            .ends(LocalDateTime.of(2024, 10, 25, 16, 0), OutlookTimeZone.TZ_ROMANCE_STANDARD_TIME)
+            .repeats(FrequencyType.DAILY)
+            .until(LocalDateTime.of(2024, 10, 29, 16, 0))
+            .summary("Test event")
+            .attendee("Bugs Bunny", "bugs.bunny@wb.com")
+            .attendee("daffy.duck@wb.com")
+            .build();
+
+        var str = VCalendar.builder()
+            .outlookVTimeZone(OutlookTimeZone.TZ_ROMANCE_STANDARD_TIME)
+            .event(ev)
+            .build()
+            .toString();
+
+        try (var fs = new FileOutputStream("test.ics")) {
+            fs.write(str.getBytes());
+
+            fs.flush();
+        }
+    }
+
+    @Test
     public void testEmail() {
         var tz = TimeZone.getTimeZone("America/New_York");
         var ev = VEvent

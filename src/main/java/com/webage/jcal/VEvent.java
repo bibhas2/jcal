@@ -323,6 +323,17 @@ public class VEvent {
 
             return this;
         }
+        /**
+         * Sets the start date and time of the event using an Outlook time zone ID.
+         * @param startDateTime the start date and time
+         * @param timeZoneId the time zone ID as defined in the VCalendar
+         * @return
+         */
+        public Builder starts(LocalDateTime startDateTime, OutlookTimeZone tz) {
+            event.setStartDateTime(startDateTime, tz.toString());
+
+            return this;
+        }
 
         /**
          * Sets the start date of the event. Use this to create a day long event.
@@ -361,6 +372,17 @@ public class VEvent {
             return this;
         }
 
+        /**
+         * Sets the end date and time of an event using an Outlook time zone ID.
+         * @param endDateTime
+         * @param timeZoneId the time zone ID defined in the VCalendar
+         * @return
+         */
+        public Builder ends(LocalDateTime endDateTime, OutlookTimeZone tz) {
+            event.setEndDateTime(endDateTime, tz.toString());
+
+            return this;
+        }
         /**
          * Sets the end date of a day long event. This date is exclusive.
          * For example, if the last day of the event is Nov 2, 2022, then
