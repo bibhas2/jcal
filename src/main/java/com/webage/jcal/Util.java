@@ -13,7 +13,7 @@ import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Util {
+class Util {
     private static final int MAX_LINE_LENGTH = 75;
     private static final Map<String, String> escapades = Map.of(
         "\\", "\\\\\\\\",
