@@ -11,10 +11,25 @@ import java.util.Optional;
     * For maximum compatibility with Outlook try to use these time zones.
     */
 public enum OutlookTimeZone {
+    /**
+     * Romance Standard Time
+     */
     TZ_ROMANCE_STANDARD_TIME("Romance Standard Time"),
+    /**
+     * Singapore Standard Time
+     */
     TZ_SINGAPORE_STANDARD_TIME("Singapore Standard Time"),
+    /**
+     * India Standard Time
+     */
     TZ_INDIA_STANDARD_TIME("India Standard Time"),
+    /**
+     * FLE Standard Time
+     */
     TZ_FLE_STANDARD_TIME("FLE Standard Time"),
+    /**
+     * GMT Standard Time
+     */
     TZ_GMT_STANDARD_TIME("GMT Standard Time");
 
     private final String tzId;
